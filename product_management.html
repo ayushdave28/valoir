@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>𝓥𝓪𝓵𝓸𝓲𝓻 - Product Management</title>
+
+  <!-- Tailwind & Lucide -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-gold': '#A08552',
+            'primary-dark': '#0F0F0F',
+            'secondary-dark': '#1F1F1F',
+          },
+          fontFamily: {
+            'serif-title': ['Playfair Display', 'serif'],
+            'sans-body': ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'gold-glow': '0 0 15px rgba(160,133,82,0.6)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'sans-body', sans-serif; }
+    .lux-title { font-family: 'serif-title', serif; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F0F0F; }
+    ::-webkit-scrollbar-thumb { background: #A08552; border-radius: 4px; }
+  </style>
+</head>
+
+<body class="bg-primary-dark text-white min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-secondary-dark p-6 border-r border-primary-gold/30 hidden md:block">
+    <h1 class="text-3xl lux-title text-primary-gold mb-10 text-center">𝓥𝓪𝓵𝓸𝓲𝓻</h1>
+    <nav class="space-y-3">
+      <a href="admin_dashboard.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Dashboard</a>
+      <a href="product_management.html" class="block px-4 py-2 bg-primary-gold text-primary-dark rounded-lg font-semibold">Product Management</a>
+      <a href="order_tracking.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Order Tracking</a>
+      <a href="inventory.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Inventory</a>
+      <a href="sales_report.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Sales Report</a>
+      <a href="../index.html" class="block px-4 py-2 mt-8 text-sm text-gray-400 hover:text-primary-gold">← Back to Store</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <header class="flex justify-between items-center mb-10">
+      <h2 class="text-3xl lux-title text-primary-gold">Product Management</h2>
+      <div class="flex items-center space-x-3">
+        <button class="bg-primary-gold text-primary-dark px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90">Admin</button>
+        <i data-lucide="settings" class="w-6 h-6 text-primary-gold"></i>
+      </div>
+    </header>
+
+    <!-- Add Product Form -->
+    <section class="bg-secondary-dark border border-primary-gold/20 rounded-xl p-6 shadow-gold-glow/20 mb-10">
+      <h3 class="text-2xl lux-title text-primary-gold mb-4">Add / Edit Product</h3>
+      <form id="productForm" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <input type="hidden" id="editIndex" />
+        <input type="text" id="model" placeholder="Model Name" class="p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required />
+        <select id="type" class="p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+          <option value="">Select Type</option>
+          <option value="Men">Men</option>
+          <option value="Women">Women</option>
+        </select>
+        <input type="number" id="price" placeholder="Price ($)" class="p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required />
+        <input type="number" id="stock" placeholder="Stock Qty" class="p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required />
+        <button type="submit" class="col-span-1 md:col-span-2 lg:col-span-4 bg-primary-gold text-primary-dark py-3 rounded-lg font-bold hover:bg-opacity-90 transition shadow-md hover:shadow-gold-glow">Save Product</button>
+      </form>
+    </section>
+
+    <!-- Product Table -->
+    <section class="bg-secondary-dark border border-primary-gold/20 rounded-xl p-6 shadow-gold-glow/20">
+      <h3 class="text-2xl lux-title text-primary-gold mb-6">All Products</h3>
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-primary-gold/30">
+            <th class="p-3">#</th>
+            <th class="p-3">Model</th>
+            <th class="p-3">Type</th>
+            <th class="p-3">Price</th>
+            <th class="p-3">Stock</th>
+            <th class="p-3 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody" class="text-gray-300"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Default products (6 watches)
+    const defaultProducts = [
+      { model: "Rolex GMT-Master II", type: "Men", price: 110000, stock: 10 },
+      { model: "Patek Philippe Nautilus", type: "Men", price: 215000, stock: 5 },
+      { model: "RM 005 Automatic", type: "Men", price: 435500, stock: 3 },
+      { model: "Rolex Lady-Datejust", type: "Women", price: 145000, stock: 8 },
+      { model: "Patek Philippe TWENTY~4", type: "Women", price: 321000, stock: 4 },
+      { model: "Tissot PRX 35mm", type: "Women", price: 51000, stock: 12 },
+    ];
+
+    let products = JSON.parse(localStorage.getItem("products")) || defaultProducts;
+
+    const form = document.getElementById("productForm");
+    const tableBody = document.getElementById("productTableBody");
+
+    // Render all products
+    function renderProducts() {
+      tableBody.innerHTML = "";
+      products.forEach((p, i) => {
+        const row = document.createElement("tr");
+        row.className = "border-b border-primary-gold/10 hover:bg-primary-dark/40";
+        row.innerHTML = `
+          <td class="p-3">${i + 1}</td>
+          <td class="p-3 text-primary-gold">${p.model}</td>
+          <td class="p-3">${p.type}</td>
+          <td class="p-3">$${p.price.toLocaleString()}</td>
+          <td class="p-3">${p.stock}</td>
+          <td class="p-3 text-center space-x-2">
+            <button onclick="editProduct(${i})" class="bg-blue-500/30 text-blue-300 px-3 py-1 rounded hover:bg-blue-500/50">Edit</button>
+            <button onclick="deleteProduct(${i})" class="bg-red-500/30 text-red-300 px-3 py-1 rounded hover:bg-red-500/50">Delete</button>
+          </td>
+        `;
+        tableBody.appendChild(row);
+      });
+      localStorage.setItem("products", JSON.stringify(products));
+    }
+
+    // Add or edit product
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const model = document.getElementById("model").value.trim();
+      const type = document.getElementById("type").value;
+      const price = parseInt(document.getElementById("price").value);
+      const stock = parseInt(document.getElementById("stock").value);
+      const editIndex = document.getElementById("editIndex").value;
+
+      if (editIndex) {
+        products[editIndex] = { model, type, price, stock };
+        document.getElementById("editIndex").value = "";
+      } else {
+        products.push({ model, type, price, stock });
+      }
+
+      form.reset();
+      renderProducts();
+    });
+
+    // Edit product
+    function editProduct(index) {
+      const p = products[index];
+      document.getElementById("model").value = p.model;
+      document.getElementById("type").value = p.type;
+      document.getElementById("price").value = p.price;
+      document.getElementById("stock").value = p.stock;
+      document.getElementById("editIndex").value = index;
+    }
+
+    // Delete product
+    function deleteProduct(index) {
+      if (confirm(`Are you sure you want to delete "${products[index].model}"?`)) {
+        products.splice(index, 1);
+        renderProducts();
+      }
+    }
+
+    // Initialize
+    renderProducts();
+  </script>
+</body>
+</html>

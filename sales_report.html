@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>𝓥𝓪𝓵𝓸𝓲𝓻 - Sales Report</title>
+
+  <!-- Tailwind & Lucide -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Theme -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-gold': '#A08552',
+            'primary-dark': '#0F0F0F',
+            'secondary-dark': '#1F1F1F',
+          },
+          fontFamily: {
+            'serif-title': ['Playfair Display', 'serif'],
+            'sans-body': ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'gold-glow': '0 0 15px rgba(160,133,82,0.6)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'sans-body', sans-serif; }
+    .lux-title { font-family: 'serif-title', serif; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F0F0F; }
+    ::-webkit-scrollbar-thumb { background: #A08552; border-radius: 4px; }
+  </style>
+</head>
+
+<body class="bg-primary-dark text-white min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-secondary-dark p-6 border-r border-primary-gold/30 hidden md:block">
+    <h1 class="text-3xl lux-title text-primary-gold mb-10 text-center">𝓥𝓪𝓵𝓸𝓲𝓻</h1>
+    <nav class="space-y-3">
+      <a href="admin_dashboard.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Dashboard</a>
+      <a href="product_management.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Product Management</a>
+      <a href="order_tracking.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Order Tracking</a>
+      <a href="inventory.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Inventory</a>
+      <a href="sales_report.html" class="block px-4 py-2 bg-primary-gold text-primary-dark rounded-lg font-semibold">Sales Report</a>
+      <a href="../index.html" class="block px-4 py-2 mt-8 text-sm text-gray-400 hover:text-primary-gold">← Back to Store</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <header class="flex justify-between items-center mb-10">
+      <h2 class="text-3xl lux-title text-primary-gold">Sales & Revenue Report</h2>
+      <div class="flex items-center space-x-3">
+        <button class="bg-primary-gold text-primary-dark px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90">Admin</button>
+        <i data-lucide="bar-chart-3" class="w-6 h-6 text-primary-gold"></i>
+      </div>
+    </header>
+
+    <!-- Overview Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/30 text-center">
+        <i data-lucide="shopping-cart" class="w-8 h-8 text-primary-gold mx-auto mb-3"></i>
+        <h3 class="text-lg text-gray-300 mb-1">Total Orders</h3>
+        <p id="total-orders" class="text-3xl font-bold text-primary-gold">0</p>
+      </div>
+
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/30 text-center">
+        <i data-lucide="dollar-sign" class="w-8 h-8 text-primary-gold mx-auto mb-3"></i>
+        <h3 class="text-lg text-gray-300 mb-1">Total Revenue</h3>
+        <p id="total-revenue" class="text-3xl font-bold text-primary-gold">$0</p>
+      </div>
+
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/30 text-center">
+        <i data-lucide="star" class="w-8 h-8 text-primary-gold mx-auto mb-3"></i>
+        <h3 class="text-lg text-gray-300 mb-1">Best Selling Model</h3>
+        <p id="top-model" class="text-xl font-bold text-primary-gold">—</p>
+      </div>
+    </section>
+
+    <!-- Charts Section -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+      <!-- Monthly Sales Chart -->
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/20">
+        <h3 class="text-2xl lux-title text-primary-gold mb-4">Monthly Sales Overview</h3>
+        <canvas id="salesChart" height="200"></canvas>
+      </div>
+
+      <!-- Product Revenue Breakdown -->
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/20">
+        <h3 class="text-2xl lux-title text-primary-gold mb-4">Revenue by Watch Model</h3>
+        <canvas id="revenueChart" height="200"></canvas>
+      </div>
+    </section>
+
+    <!-- Table -->
+    <section class="bg-secondary-dark border border-primary-gold/20 rounded-xl p-6 shadow-gold-glow/20">
+      <h3 class="text-2xl lux-title text-primary-gold mb-6">Detailed Sales Data</h3>
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-primary-gold/30">
+            <th class="p-3">Model</th>
+            <th class="p-3">Units Sold</th>
+            <th class="p-3">Revenue</th>
+          </tr>
+        </thead>
+        <tbody id="sales-table-body" class="text-gray-300"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    // Mock sales data for 6 watches
+    const SALES_DATA = [
+      { model: "Rolex GMT-Master II", sold: 8, price: 110000 },
+      { model: "Patek Philippe Nautilus", sold: 5, price: 215000 },
+      { model: "RM 005 Automatic", sold: 2, price: 435500 },
+      { model: "Rolex Lady-Datejust", sold: 6, price: 145000 },
+      { model: "Patek Philippe TWENTY~4", sold: 4, price: 321000 },
+      { model: "Tissot PRX 35mm", sold: 10, price: 51000 },
+    ];
+
+    // Monthly sales mock data
+    const monthlySales = [120000, 250000, 180000, 400000, 350000, 280000, 520000, 610000, 480000, 590000, 700000, 650000];
+    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+    // Calculate totals
+    const totalOrders = SALES_DATA.reduce((sum, w) => sum + w.sold, 0);
+    const totalRevenue = SALES_DATA.reduce((sum, w) => sum + w.sold * w.price, 0);
+    const topModel = SALES_DATA.reduce((max, w) => w.sold > max.sold ? w : max, SALES_DATA[0]);
+
+    // Fill summary cards
+    document.getElementById("total-orders").textContent = totalOrders;
+    document.getElementById("total-revenue").textContent = "$" + totalRevenue.toLocaleString();
+    document.getElementById("top-model").textContent = topModel.model;
+
+    // Populate detailed table
+    const tbody = document.getElementById("sales-table-body");
+    SALES_DATA.forEach(w => {
+      const tr = document.createElement("tr");
+      tr.className = "border-b border-primary-gold/10 hover:bg-primary-dark/40";
+      tr.innerHTML = `
+        <td class="p-3 text-primary-gold">${w.model}</td>
+        <td class="p-3">${w.sold}</td>
+        <td class="p-3">$${(w.sold * w.price).toLocaleString()}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    // Chart 1: Monthly Sales Line Chart
+    const ctx1 = document.getElementById("salesChart").getContext("2d");
+    new Chart(ctx1, {
+      type: "line",
+      data: {
+        labels: months,
+        datasets: [{
+          label: "Monthly Revenue ($)",
+          data: monthlySales,
+          borderColor: "#A08552",
+          backgroundColor: "rgba(160,133,82,0.2)",
+          tension: 0.3,
+          fill: true,
+        }]
+      },
+      options: {
+        plugins: { legend: { labels: { color: "#fff" } } },
+        scales: {
+          x: { ticks: { color: "#ccc" }, grid: { color: "rgba(255,255,255,0.1)" } },
+          y: { ticks: { color: "#ccc" }, grid: { color: "rgba(255,255,255,0.1)" } },
+        }
+      }
+    });
+
+    // Chart 2: Revenue by Model (Bar Chart)
+    const ctx2 = document.getElementById("revenueChart").getContext("2d");
+    new Chart(ctx2, {
+      type: "bar",
+      data: {
+        labels: SALES_DATA.map(w => w.model),
+        datasets: [{
+          label: "Revenue ($)",
+          data: SALES_DATA.map(w => w.sold * w.price),
+          backgroundColor: "rgba(160,133,82,0.6)",
+          borderColor: "#A08552",
+          borderWidth: 1,
+        }]
+      },
+      options: {
+        plugins: { legend: { labels: { color: "#fff" } } },
+        scales: {
+          x: { ticks: { color: "#ccc" }, grid: { color: "rgba(255,255,255,0.1)" } },
+          y: { ticks: { color: "#ccc" }, grid: { color: "rgba(255,255,255,0.1)" } },
+        }
+      }
+    });
+  </script>
+</body>
+</html>

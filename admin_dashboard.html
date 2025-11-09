@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>𝓥𝓪𝓵𝓸𝓲𝓻 - Admin Dashboard</title>
+
+  <!-- Tailwind & Lucide -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Theme -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-gold': '#A08552',
+            'primary-dark': '#0F0F0F',
+            'secondary-dark': '#1F1F1F',
+          },
+          fontFamily: {
+            'serif-title': ['Playfair Display', 'serif'],
+            'sans-body': ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'gold-glow': '0 0 15px rgba(160,133,82,0.6)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'sans-body', sans-serif; }
+    .lux-title { font-family: 'serif-title', serif; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F0F0F; }
+    ::-webkit-scrollbar-thumb { background: #A08552; border-radius: 4px; }
+  </style>
+</head>
+
+<body class="bg-primary-dark text-white min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-secondary-dark p-6 border-r border-primary-gold/30 hidden md:block">
+    <h1 class="text-3xl lux-title text-primary-gold mb-10 text-center">𝓥𝓪𝓵𝓸𝓲𝓻</h1>
+    <nav class="space-y-3">
+      <a href="admin_dashboard.html" class="block px-4 py-2 bg-primary-gold text-primary-dark rounded-lg font-semibold">Dashboard</a>
+      <a href="product_management.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Product Management</a>
+      <a href="order_tracking.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Order Tracking</a>
+      <a href="inventory.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Inventory</a>
+      <a href="sales_report.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Sales Report</a>
+      <a href="../index.html" class="block px-4 py-2 mt-8 text-sm text-gray-400 hover:text-primary-gold">← Back to Store</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <header class="flex justify-between items-center mb-10">
+      <h2 class="text-3xl lux-title text-primary-gold">Admin Dashboard</h2>
+      <div class="flex items-center space-x-4">
+        <button class="bg-primary-gold text-primary-dark px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90">Admin</button>
+        <i data-lucide="user-cog" class="w-6 h-6 text-primary-gold"></i>
+      </div>
+    </header>
+
+    <!-- Summary Cards -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/30 text-center">
+        <i data-lucide="watch" class="w-8 h-8 text-primary-gold mx-auto mb-3"></i>
+        <h3 class="text-lg text-gray-300 mb-1">Total Watches</h3>
+        <p class="text-3xl font-bold text-primary-gold">6</p>
+      </div>
+
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/30 text-center">
+        <i data-lucide="shopping-bag" class="w-8 h-8 text-primary-gold mx-auto mb-3"></i>
+        <h3 class="text-lg text-gray-300 mb-1">Orders</h3>
+        <p class="text-3xl font-bold text-primary-gold">24</p>
+      </div>
+
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/30 text-center">
+        <i data-lucide="dollar-sign" class="w-8 h-8 text-primary-gold mx-auto mb-3"></i>
+        <h3 class="text-lg text-gray-300 mb-1">Revenue</h3>
+        <p class="text-3xl font-bold text-primary-gold">$1.05M</p>
+      </div>
+
+      <div class="bg-secondary-dark border border-primary-gold/20 p-6 rounded-xl shadow-gold-glow/30 text-center">
+        <i data-lucide="users" class="w-8 h-8 text-primary-gold mx-auto mb-3"></i>
+        <h3 class="text-lg text-gray-300 mb-1">Active Customers</h3>
+        <p class="text-3xl font-bold text-primary-gold">120</p>
+      </div>
+    </section>
+
+    <!-- Watch Summary Table -->
+    <section class="bg-secondary-dark border border-primary-gold/20 rounded-xl p-6 shadow-gold-glow/20 mb-12">
+      <h3 class="text-2xl lux-title text-primary-gold mb-6">Current Watch Collection</h3>
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="border-b border-primary-gold/30">
+            <th class="p-3">#</th>
+            <th class="p-3">Model</th>
+            <th class="p-3">Type</th>
+            <th class="p-3">Price</th>
+            <th class="p-3">Stock</th>
+          </tr>
+        </thead>
+        <tbody id="watch-table-body" class="text-gray-300"></tbody>
+      </table>
+    </section>
+
+    
+
+  <script>
+    lucide.createIcons();
+
+    // Your 6 watches (from client side)
+    const WATCH_DATA = [
+      { id: 1, model: "Rolex GMT-Master II", type: "Men", price: "$110,000", stock: 10 },
+      { id: 2, model: "Patek Philippe Nautilus", type: "Men", price: "$215,000", stock: 5 },
+      { id: 3, model: "RM 005 Automatic", type: "Men", price: "$435,500", stock: 3 },
+      { id: 4, model: "Rolex Lady-Datejust", type: "Women", price: "$145,000", stock: 8 },
+      { id: 5, model: "Patek Philippe TWENTY~4", type: "Women", price: "$321,000", stock: 4 },
+      { id: 6, model: "Tissot PRX 35mm", type: "Women", price: "$51,000", stock: 12 },
+    ];
+
+    const tableBody = document.getElementById('watch-table-body');
+    WATCH_DATA.forEach((watch, index) => {
+      const row = document.createElement('tr');
+      row.className = "border-b border-primary-gold/10 hover:bg-primary-dark/40";
+      row.innerHTML = `
+        <td class="p-3">${index + 1}</td>
+        <td class="p-3 text-primary-gold">${watch.model}</td>
+        <td class="p-3">${watch.type}</td>
+        <td class="p-3">${watch.price}</td>
+        <td class="p-3">${watch.stock}</td>
+      `;
+      tableBody.appendChild(row);
+    });
+  </script>
+</body>
+</html>

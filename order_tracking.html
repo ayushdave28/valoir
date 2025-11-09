@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>𝓥𝓪𝓵𝓸𝓲𝓻 - Order Tracking</title>
+
+  <!-- Tailwind CSS + Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'primary-gold': '#A08552',
+            'primary-dark': '#0F0F0F',
+            'secondary-dark': '#1F1F1F',
+          },
+          fontFamily: {
+            'serif-title': ['Playfair Display', 'serif'],
+            'sans-body': ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'gold-glow': '0 0 15px rgba(160,133,82,0.6)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { font-family: 'sans-body', sans-serif; }
+    .lux-title { font-family: 'serif-title', serif; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #0F0F0F; }
+    ::-webkit-scrollbar-thumb { background: #A08552; border-radius: 4px; }
+  </style>
+</head>
+
+<body class="bg-primary-dark text-white min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-secondary-dark p-6 border-r border-primary-gold/30 hidden md:block">
+    <h1 class="text-3xl lux-title text-primary-gold mb-10 text-center">𝓥𝓪𝓵𝓸𝓲𝓻</h1>
+    <nav class="space-y-3">
+      <a href="admin_dashboard.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Dashboard</a>
+      <a href="product_management.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Product Management</a>
+      <a href="order_tracking.html" class="block px-4 py-2 bg-primary-gold text-primary-dark rounded-lg font-semibold">Order Tracking</a>
+      <a href="inventory.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Inventory</a>
+      <a href="sales_report.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-lg">Sales Report</a>
+      <a href="../index.html" class="block px-4 py-2 mt-8 text-sm text-gray-400 hover:text-primary-gold">← Back to Store</a>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 p-8">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-10">
+      <h2 class="text-3xl lux-title text-primary-gold">Order Tracking</h2>
+      <div class="flex items-center space-x-3">
+        <button class="bg-primary-gold text-primary-dark px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90">Admin</button>
+        <i data-lucide="package" class="w-6 h-6 text-primary-gold"></i>
+      </div>
+    </header>
+
+    <!-- Filter Buttons -->
+    <div class="flex flex-wrap gap-3 mb-8">
+      <button onclick="filterOrders('All')" class="filter-btn bg-primary-gold text-primary-dark px-4 py-2 rounded-lg font-semibold hover:bg-opacity-90">All</button>
+      <button onclick="filterOrders('Pending')" class="filter-btn bg-secondary-dark text-gray-300 border border-primary-gold/30 px-4 py-2 rounded-lg hover:bg-primary-gold/20">Pending</button>
+      <button onclick="filterOrders('Shipped')" class="filter-btn bg-secondary-dark text-gray-300 border border-primary-gold/30 px-4 py-2 rounded-lg hover:bg-primary-gold/20">Shipped</button>
+      <button onclick="filterOrders('Delivered')" class="filter-btn bg-secondary-dark text-gray-300 border border-primary-gold/30 px-4 py-2 rounded-lg hover:bg-primary-gold/20">Delivered</button>
+      <button onclick="filterOrders('Cancelled')" class="filter-btn bg-secondary-dark text-gray-300 border border-primary-gold/30 px-4 py-2 rounded-lg hover:bg-primary-gold/20">Cancelled</button>
+    </div>
+
+    <!-- Orders Table -->
+    <section class="bg-secondary-dark border border-primary-gold/20 rounded-xl p-6 shadow-gold-glow/20">
+      <h3 class="text-2xl lux-title text-primary-gold mb-6">Recent Orders</h3>
+      <table class="w-full border-collapse text-left">
+        <thead>
+          <tr class="border-b border-primary-gold/30">
+            <th class="p-3">Order ID</th>
+            <th class="p-3">Customer</th>
+            <th class="p-3">Product</th>
+            <th class="p-3">Amount</th>
+            <th class="p-3">Date</th>
+            <th class="p-3">Status</th>
+          </tr>
+        </thead>
+        <tbody id="order-table-body" class="text-gray-300"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    const orders = [
+      { id: 'ORD-1001', customer: 'Rahul Mehta', product: 'Rolex GMT-Master II', amount: '$110,000', date: '2025-10-01', status: 'Delivered' },
+      { id: 'ORD-1002', customer: 'Simran Patel', product: 'Lady-Datejust', amount: '$145,000', date: '2025-10-05', status: 'Shipped' },
+      { id: 'ORD-1003', customer: 'Aarav Shah', product: 'RM 005 Automatic', amount: '$435,500', date: '2025-10-08', status: 'Pending' },
+      { id: 'ORD-1004', customer: 'Neha Sharma', product: 'Patek Philippe TWENTY~4', amount: '$321,000', date: '2025-10-12', status: 'Cancelled' },
+      { id: 'ORD-1005', customer: 'Karan Desai', product: 'Tissot PRX 35mm', amount: '$51,000', date: '2025-10-15', status: 'Delivered' },
+      { id: 'ORD-1006', customer: 'Ishita Ghosh', product: 'Patek Philippe Nautilus', amount: '$215,000', date: '2025-10-20', status: 'Shipped' },
+    ];
+
+    const orderBody = document.getElementById('order-table-body');
+
+    function renderOrders(list) {
+      orderBody.innerHTML = '';
+      list.forEach(order => {
+        const row = document.createElement('tr');
+        row.className = "border-b border-primary-gold/10 hover:bg-primary-dark/40";
+        row.innerHTML = `
+          <td class="p-3 text-primary-gold">${order.id}</td>
+          <td class="p-3">${order.customer}</td>
+          <td class="p-3">${order.product}</td>
+          <td class="p-3">${order.amount}</td>
+          <td class="p-3">${order.date}</td>
+          <td class="p-3">${statusBadge(order.status)}</td>
+        `;
+        orderBody.appendChild(row);
+      });
+    }
+
+    function statusBadge(status) {
+      const colors = {
+        'Pending': 'bg-yellow-500/30 text-yellow-300',
+        'Shipped': 'bg-blue-500/30 text-blue-300',
+        'Delivered': 'bg-green-500/30 text-green-300',
+        'Cancelled': 'bg-red-500/30 text-red-300'
+      };
+      return `<span class="px-3 py-1 rounded-full text-sm font-semibold ${colors[status] || 'bg-gray-500/30 text-gray-300'}">${status}</span>`;
+    }
+
+    function filterOrders(status) {
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => btn.classList.remove('bg-primary-gold', 'text-primary-dark'));
+      event.target.classList.add('bg-primary-gold', 'text-primary-dark');
+
+      if (status === 'All') renderOrders(orders);
+      else renderOrders(orders.filter(o => o.status === status));
+    }
+
+    // Initial render
+    renderOrders(orders);
+  </script>
+</body>
+</html>

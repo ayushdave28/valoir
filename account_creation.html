@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝓥𝓪𝓵𝓸𝓲𝓻 - My Account</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons for classy icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Tailwind Configuration for Luxury Theme (Gold/Dark) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-gold': '#A08552', // Luxurious Gold
+                        'primary-dark': '#0F0F0F', // Deep Charcoal/Black
+                        'secondary-dark': '#1F1F1F',
+                    },
+                    fontFamily: {
+                        'serif-title': ['Playfair Display', 'serif'], // Elegant Serif for titles
+                        'sans-body': ['Inter', 'sans-serif'], // Clean Sans for body
+                    },
+                    boxShadow: {
+                        'gold-glow': '0 0 15px rgba(160, 133, 82, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'sans-body', sans-serif; }
+        .lux-title { font-family: 'serif-title', serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0F0F0F; }
+        ::-webkit-scrollbar-thumb { background: #A08552; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C4A778; }
+    </style>
+</head>
+
+<body class="bg-primary-dark text-white min-h-screen antialiased">
+
+    <!-- Profile/Account Modal (Hidden by default) - Included for site consistency -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4">
+        <div class="bg-secondary-dark rounded-xl w-full max-w-md p-6 shadow-gold-glow border border-primary-gold/30">
+            <div class="flex justify-between items-center mb-6 border-b border-primary-gold/20 pb-3">
+                <h3 class="text-xl lux-title text-primary-gold">Account Access</h3>
+                <button onclick="toggleModal('profile-modal')" class="text-white hover:text-primary-gold transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p class="text-center text-sm mb-4">Login or <a href="account.html" class="text-primary-gold hover:underline">Create Account</a></p>
+            <!-- Mock Login Form -->
+            <form>
+                <input type="email" placeholder="Email" class="w-full p-3 mb-4 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                <input type="password" placeholder="Password" class="w-full p-3 mb-6 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                <button type="submit" class="w-full bg-primary-gold text-primary-dark py-3 rounded-lg font-bold hover:bg-opacity-90 transition shadow-md hover:shadow-gold-glow">Log In</button>
+                <a href="account.html" class="block text-center mt-4 text-sm text-gray-400 hover:text-primary-gold">Forgot Password?</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Message Box (Instead of alert()) -->
+    <div id="message-box" class="fixed top-5 right-5 z-50 p-4 rounded-lg shadow-gold-glow hidden transition-opacity duration-300 bg-green-900 text-white border border-green-700"></div>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="bg-primary-dark/90 sticky top-0 z-40 shadow-xl backdrop-blur-sm border-b border-primary-gold/30">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
+            <!-- Brand Name -->
+            <a href="index.html" class="text-3xl lux-title font-bold text-primary-gold tracking-wider">𝓥𝓪𝓵𝓸𝓲𝓻</a>
+
+            
+
+            <!-- Icons/Utility Section (Search, Profile) -->
+            <div class="flex items-center space-x-4">
+                <!-- Search Bar -->
+                <button class="text-white hover:text-primary-gold transition">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </button>
+                <!-- Profile Section -->
+                <button onclick="toggleModal('profile-modal')" class="text-white hover:text-primary-gold transition flex items-center">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                </button>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="lg:hidden text-white hover:text-primary-gold transition">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="lg:hidden hidden border-t border-primary-gold/30">
+            <div class="px-4 pt-2 pb-3 space-y-1">
+                <a href="men_collection.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary-dark hover:text-primary-gold">Shop: For Him</a>
+                <a href="women_collection.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary-dark hover:text-primary-gold">Shop: For Her</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary-dark hover:text-primary-gold">Contact Us</a>
+                <a href="account.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary-dark hover:text-primary-gold">Account/Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        
+        <div class="max-w-4xl mx-auto bg-secondary-dark rounded-xl p-8 shadow-gold-glow/50 border border-primary-gold/10">
+            
+            <header class="text-center mb-10">
+                <h1 class="text-4xl lux-title font-extrabold text-primary-gold mb-2">Create Your Valoir Account</h1>
+                <p class="text-gray-400">Join the mark of time. The essence of worth.</p>
+            </header>
+
+            <!-- Sign Up Form -->
+            <form id="signup-form" onsubmit="event.preventDefault(); validateSignup();">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-300 mb-2">Your Name</label>
+                        <input type="text" id="name" placeholder="Full Name" class="w-full p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                        <input type="email" id="email" placeholder="example@valoir.com" class="w-full p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                        <p id="email-error" class="text-red-500 text-xs mt-1 hidden">Invalid email format.</p>
+                    </div>
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-300 mb-2">Phone No.</label>
+                        <input type="tel" id="phone" placeholder="+91-1234567890" class="w-full p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                        <p id="phone-error" class="text-red-500 text-xs mt-1 hidden">Phone must be 10 digits (e.g., 9876543210).</p>
+                    </div>
+                    <div>
+                        <label for="dob" class="block text-sm font-medium text-gray-300 mb-2">Date of Birth</label>
+                        <input type="date" id="dob" class="w-full p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                    </div>
+                </div>
+
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                    <input type="password" id="password" placeholder="Minimum 8 characters" class="w-full p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                    <p id="password-error" class="text-red-500 text-xs mt-1 hidden">Password must be at least 8 characters long.</p>
+                </div>
+
+                <div class="mb-8">
+                    <label for="confirm-password" class="block text-sm font-medium text-gray-300 mb-2">Confirm Password</label>
+                    <input type="password" id="confirm-password" placeholder="Re-enter Password" class="w-full p-3 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                    <p id="confirm-error" class="text-red-500 text-xs mt-1 hidden">Passwords do not match.</p>
+                </div>
+
+                <button type="submit" class="w-full bg-primary-gold text-primary-dark py-3 rounded-lg font-bold hover:bg-opacity-90 transition shadow-md hover:shadow-gold-glow">Create Account & Save</button>
+
+                <p class="text-center mt-6 text-sm text-gray-400">
+                    Already have an account? 
+                    <a href="#" onclick="toggleModal('profile-modal')" class="text-primary-gold hover:underline">Log In</a>
+                </p>
+                <p class="text-center mt-2 text-sm text-gray-400">
+                    <a href="#" class="hover:text-primary-gold">Forgot Password?</a>
+                </p>
+            </form>
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-primary-dark border-t border-primary-gold/30">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-start space-y-6 md:space-y-0">
+                
+                <div class="text-center md:text-left">
+                    <h3 class="text-2xl lux-title font-bold text-primary-gold mb-2">𝓥𝓪𝓵𝓸𝓲𝓻</h3>
+                    <p class="text-sm text-gray-400">&copy; <span id="year"></span> Valoir. All rights reserved.</p>
+                </div>
+
+                <!-- Navigation Links in Footer -->
+                <div class="flex flex-col items-center md:items-start space-y-2 text-sm">
+                    <a href="index.html" class="text-gray-300 hover:text-primary-gold transition">Home</a>
+                    <a href="men_collection.html" class="text-gray-300 hover:text-primary-gold transition">Men's Watches</a>
+                    <a href="women_collection.html" class="text-gray-300 hover:text-primary-gold transition">Women's Watches</a>
+                    <a href="account.html" class="text-gray-300 hover:text-primary-gold transition">My Account</a>
+                    <a href="contact.html" class="text-gray-300 hover:text-primary-gold transition">Contact</a>
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="flex flex-col items-center md:items-end space-y-2">
+                    <p class="text-sm text-gray-200">Connect With Us</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary-gold transition"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary-gold transition"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary-gold transition"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Dynamic Elements & Validation Type 1: Regex and Cross-Field -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Footer year update
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Universal Modal Toggle Function
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
+        }
+
+        // Function to show custom message box
+        function showMessage(message, type = 'success') {
+            const box = document.getElementById('message-box');
+            box.textContent = message;
+            
+            box.classList.remove('hidden', 'bg-red-900', 'bg-green-900', 'border-red-700', 'border-green-700');
+            
+            if (type === 'error') {
+                box.classList.add('bg-red-900', 'border-red-700');
+            } else {
+                box.classList.add('bg-green-900', 'border-green-700');
+            }
+
+            // Show the box
+            box.style.opacity = '1';
+
+            // Hide after 4 seconds
+            setTimeout(() => {
+                box.style.opacity = '0';
+                setTimeout(() => {
+                    box.classList.add('hidden');
+                }, 300); // Wait for transition to finish
+            }, 4000);
+        }
+
+        // --- Validation Type 1: Regex/Format and Cross-Field Check ---
+        function validateSignup() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value.replace(/[^0-9]/g, ''); // Remove non-digits
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            const emailError = document.getElementById('email-error');
+            const phoneError = document.getElementById('phone-error');
+            const passwordError = document.getElementById('password-error');
+            const confirmError = document.getElementById('confirm-error');
+
+            let isValid = true;
+
+            // Reset errors
+            emailError.classList.add('hidden');
+            phoneError.classList.add('hidden');
+            passwordError.classList.add('hidden');
+            confirmError.classList.add('hidden');
+
+            // 1. Email Format Validation (Regex)
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                emailError.classList.remove('hidden');
+                isValid = false;
+            }
+
+            // 2. Phone Format Validation (Regex/Length)
+            // Checks for exactly 10 digits
+            if (phone.length !== 10) {
+                phoneError.classList.remove('hidden');
+                isValid = false;
+            }
+
+            // 3. Password Length Validation
+            if (password.length < 8) {
+                passwordError.classList.remove('hidden');
+                isValid = false;
+            }
+
+            // 4. Password Match Validation (Cross-Field)
+            if (password !== confirmPassword) {
+                confirmError.classList.remove('hidden');
+                isValid = false;
+            }
+
+            if (isValid) {
+                showMessage(`Account created successfully for ${name}!`, 'success');
+                // In a real application, you would send this data to a server here.
+                document.getElementById('signup-form').reset();
+            } else {
+                showMessage("Please fix the errors in the form.", 'error');
+            }
+        }
+    </script>
+</body>
+</html>

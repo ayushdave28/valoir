@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝓥𝓪𝓵𝓸𝓲𝓻 - Product Detail</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load Lucide Icons for classy icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom Tailwind Configuration for Luxury Theme (Gold/Dark) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-gold': '#A08552', // Luxurious Gold
+                        'primary-dark': '#0F0F0F', // Deep Charcoal/Black
+                        'secondary-dark': '#1F1F1F',
+                    },
+                    fontFamily: {
+                        'serif-title': ['Playfair Display', 'serif'], // Elegant Serif for titles
+                        'sans-body': ['Inter', 'sans-serif'], // Clean Sans for body
+                    },
+                    boxShadow: {
+                        'gold-glow': '0 0 15px rgba(160, 133, 82, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'sans-body', sans-serif; }
+        .lux-title { font-family: 'serif-title', serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0F0F0F; }
+        ::-webkit-scrollbar-thumb { background: #A08552; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C4A778; }
+    </style>
+</head>
+
+<body class="bg-primary-dark text-white min-h-screen antialiased">
+
+    <!-- Profile/Account Modal (Hidden by default) - Included for site consistency -->
+    <div id="profile-modal" class="hidden fixed inset-0 bg-black bg-opacity-80 z-50 flex justify-center items-center p-4">
+        <div class="bg-secondary-dark rounded-xl w-full max-w-md p-6 shadow-gold-glow border border-primary-gold/30">
+            <div class="flex justify-between items-center mb-6 border-b border-primary-gold/20 pb-3">
+                <h3 class="text-xl lux-title text-primary-gold">Account Access</h3>
+                <button onclick="toggleModal('profile-modal')" class="text-white hover:text-primary-gold transition">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <p class="text-center text-sm mb-4">Login or <a href="account.html" class="text-primary-gold hover:underline">Create Account</a></p>
+            <!-- Mock Login Form -->
+            <form>
+                <input type="email" placeholder="Email" class="w-full p-3 mb-4 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                <input type="password" placeholder="Password" class="w-full p-3 mb-6 bg-primary-dark border border-primary-gold/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary-gold" required>
+                <button type="submit" class="w-full bg-primary-gold text-primary-dark py-3 rounded-lg font-bold hover:bg-opacity-90 transition shadow-md hover:shadow-gold-glow">Log In</button>
+                <a href="account.html" class="block text-center mt-4 text-sm text-gray-400 hover:text-primary-gold">Forgot Password?</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- NAVIGATION BAR -->
+    <nav class="bg-primary-dark/90 sticky top-0 z-40 shadow-xl backdrop-blur-sm border-b border-primary-gold/30">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
+            <!-- Brand Name -->
+            <a href="index.html" class="text-3xl lux-title font-bold text-primary-gold tracking-wider">𝓥𝓪𝓵𝓸𝓲𝓻</a>
+
+            <!-- Desktop Navigation -->
+            <div class="hidden lg:flex items-center space-x-8 text-sm font-medium">
+                <!-- Shop Dropdown -->
+                <div class="relative group">
+                    <button class="flex items-center text-white hover:text-primary-gold transition py-2">
+                        Shop <i data-lucide="chevron-down" class="w-4 h-4 ml-1"></i>
+                    </button>
+                    <div class="absolute left-0 mt-3 w-40 bg-secondary-dark rounded-lg shadow-gold-glow opacity-0 invisible group-hover:opacity-100 group-hover:visible transition duration-300 transform scale-95 group-hover:scale-100 origin-top border border-primary-gold/30">
+                        <a href="men_collection.html" class="block px-4 py-2 hover:bg-primary-gold/20 rounded-t-lg">For Him (Men)</a>
+                        <a href="women_collection.html" class="block px-4 py-2 hover:bg-primary-gold/20">For Her (Women)</a>
+                    </div>
+                </div>
+
+                <a href="contact.html" class="text-white hover:text-primary-gold transition py-2">Contact Us</a>
+            </div>
+
+            <!-- Icons/Utility Section (Search, Profile) -->
+            <div class="flex items-center space-x-4">
+                <!-- Search Bar -->
+                <button class="text-white hover:text-primary-gold transition">
+                    <i data-lucide="search" class="w-5 h-5"></i>
+                </button>
+                <!-- Cart -->
+                <a href="cart.html" class="relative text-white hover:text-primary-gold transition">
+                <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                <span id="cart-count" class="absolute -top-2 -right-2 bg-primary-gold text-primary-dark text-xs font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                </a>
+                <!-- Profile Section -->
+                <button onclick="toggleModal('profile-modal')" class="text-white hover:text-primary-gold transition flex items-center">
+                    <i data-lucide="user" class="w-5 h-5"></i>
+                </button>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="lg:hidden text-white hover:text-primary-gold transition">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="lg:hidden hidden border-t border-primary-gold/30">
+            <div class="px-4 pt-2 pb-3 space-y-1">
+                <a href="men_collection.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary-dark hover:text-primary-gold">Shop: For Him</a>
+                <a href="women_collection.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary-dark hover:text-primary-gold">Shop: For Her</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary-dark hover:text-primary-gold">Contact Us</a>
+                <a href="account.html" class="block px-3 py-2 rounded-md text-base font-medium text-white hover:bg-secondary-dark hover:text-primary-gold">Account/Profile</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Breadcrumbs -->
+        <nav class="text-sm mb-8 text-gray-400 text-center md:text-left">
+            <a href="index.html" class="hover:text-primary-gold">Home</a> /
+            <span id="breadcrumbs-current" class="text-primary-gold">Product Detail</span>
+        </nav>
+
+        <!-- Product Header -->
+        <header class="text-center mb-14">
+            <h1 id="product-main-title" class="text-5xl lux-title font-extrabold text-primary-gold mb-3">Rolex GMT-Master II</h1>
+            <p id="product-tagline" class="text-lg text-gray-400">The iconic traveler’s timepiece — elegance meets exploration.</p>
+        </header>
+
+        <!-- Main Product Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-20">
+
+            <!-- Left: Image Gallery -->
+            <div>
+                <div class="rounded-xl overflow-hidden shadow-gold-glow/30 border border-primary-gold/10 bg-secondary-dark">
+                    <img id="main-product-img" src="images/watch1.jpg" onerror="this.src='https://placehold.co/800x600/1F1F1F/A08552?text=Product+Image';" alt="Main Product Image" class="w-full h-[500px] object-cover">
+                </div>
+
+                <!-- Thumbnails (Simplified for dynamic content) -->
+                <div class="flex justify-center gap-3 mt-4 text-sm text-gray-400">
+                    <p>Click a card below to see details.</p>
+                </div>
+            </div>
+
+            <!-- Right: Product Information -->
+            <div class="bg-secondary-dark p-8 rounded-xl shadow-gold-glow/20 border border-primary-gold/20">
+                <h2 class="text-3xl lux-title text-primary-gold mb-4">Product Details</h2>
+                
+                <p id="product-description" class="text-lg text-gray-300 mb-6 leading-relaxed">
+                    A masterpiece of precision and style, the Rolex GMT-Master II allows travelers to effortlessly track multiple time zones. Its distinctive blue and black Cerachrom bezel and Oystersteel case embody adventure and elegance.
+                </p>
+
+                <div class="mb-6">
+                    <p id="product-price" class="text-4xl font-bold text-white mb-2">$110,000</p>
+                    <p class="text-sm text-gray-400">*Inclusive of all taxes and duties</p>
+                </div>
+
+                <!-- Bracelet Options (Mock) -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-primary-gold mb-2">Bracelet Type</h3>
+                    <div id="bracelet-options" class="flex gap-3">
+                        <button class="px-4 py-2 bg-primary-gold text-primary-dark rounded-full text-sm font-semibold">Oyster</button>
+                        <button class="px-4 py-2 border border-gray-500 hover:border-primary-gold rounded-full text-sm transition">Jubilee</button>
+                    </div>
+                </div>
+
+                <!-- Call to Action Buttons -->
+                 <div class="flex flex-col sm:flex-row gap-4 mb-8">
+                 <button id="add-to-cart"
+                 class="flex-1 bg-primary-gold text-primary-dark py-3 rounded-lg font-bold hover:bg-opacity-90 transition shadow-md hover:shadow-gold-glow flex items-center justify-center">
+                 <i data-lucide="shopping-cart" class="w-5 h-5 mr-2"></i>
+                 Add to Cart
+                 </button>
+
+                <button class="flex-1 border border-primary-gold text-primary-gold py-3 rounded-lg font-bold hover:bg-primary-gold/20 transition flex items-center justify-center">
+                <i data-lucide="heart" class="w-5 h-5 mr-2"></i> Wishlist
+                </button>
+                </div>
+
+
+                <!-- Technical Specifications -->
+                <div class="border border-primary-gold/30 rounded-lg overflow-hidden">
+                    <button onclick="toggleSpecs()" class="w-full flex justify-between items-center p-4 bg-secondary-dark text-primary-gold font-semibold hover:bg-primary-dark/50 transition">
+                        Technical Specifications
+                        <i data-lucide="chevron-down" id="specs-icon" class="w-5 h-5 transition-transform duration-300"></i>
+                    </button>
+                    <div id="specs-content" class="hidden p-4 text-gray-300 text-sm border-t border-primary-gold/30">
+                        <ul id="specs-list" class="list-disc list-inside space-y-2">
+                            <!-- Specs will be populated by JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dynamic Product Selector Grid (6 Watches) -->
+        <section class="mb-16">
+            <h2 class="text-3xl lux-title text-center text-white mb-10 border-b border-primary-gold/40 pb-3 inline-block mx-auto">Select a Timepiece</h2>
+
+            <div class="text-center text-gray-400 mb-8">
+                <p class="font-semibold text-lg text-primary-gold">Men's Collection</p>
+            </div>
+
+            <!-- Men's Watches (Row 1) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Card 1: Rolex GMT-Master II -->
+                <div class="bg-secondary-dark rounded-xl p-6 text-center shadow-gold-glow/20 hover:shadow-gold-glow transition duration-300 border border-primary-gold/10 cursor-pointer" onclick="loadProduct('gmt-master-ii')">
+                    <img src="images/watch1.jpg" onerror="this.src='https://placehold.co/400x320/1F1F1F/A08552?text=GMT';" alt="Rolex GMT-Master II" class="w-full h-56 object-cover rounded-lg mb-4 hover:scale-105 transition duration-500">
+                    <h3 class="text-xl lux-title text-primary-gold mb-1">Rolex GMT-Master II</h3>
+                </div>
+
+                <!-- Card 2: Patek Philippe Nautilus -->
+                <div class="bg-secondary-dark rounded-xl p-6 text-center shadow-gold-glow/20 hover:shadow-gold-glow transition duration-300 border border-primary-gold/10 cursor-pointer" onclick="loadProduct('patek-nautilus')">
+                    <img src="images/watch2.jpg" onerror="this.src='https://placehold.co/400x320/1F1F1F/A08552?text=Patek';" alt="Patek Philippe Nautilus" class="w-full h-56 object-cover rounded-lg mb-4 hover:scale-105 transition duration-500">
+                    <h3 class="text-xl lux-title text-primary-gold mb-1">Patek Nautilus</h3>
+                </div>
+
+                <!-- Card 3: RM 005 Automatic -->
+                <div class="bg-secondary-dark rounded-xl p-6 text-center shadow-gold-glow/20 hover:shadow-gold-glow transition duration-300 border border-primary-gold/10 cursor-pointer" onclick="loadProduct('rm-automatic')">
+                    <img src="images/watch3.jpeg" onerror="this.src='https://placehold.co/400x320/1F1F1F/A08552?text=RM';" alt="RM 005 Automatic" class="w-full h-56 object-cover rounded-lg mb-4 hover:scale-105 transition duration-500">
+                    <h3 class="text-xl lux-title text-primary-gold mb-1">RM 005 Automatic</h3>
+                </div>
+            </div>
+
+            <div class="text-center text-gray-400 mb-8 mt-12">
+                <p class="font-semibold text-lg text-primary-gold">Women's Collection</p>
+            </div>
+
+            <!-- Women's Watches (Row 2) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Card 4: Rolex Lady Datejust -->
+                <div class="bg-secondary-dark rounded-xl p-6 text-center shadow-gold-glow/20 hover:shadow-gold-glow transition duration-300 border border-primary-gold/10 cursor-pointer" onclick="loadProduct('lady-datejust')">
+                    <img src="images/watch4.avif" onerror="this.src='images/watch4';" alt="watch4" class="w-full h-56 object-cover rounded-lg mb-4 hover:scale-105 transition duration-500">
+                    <h3 class="text-xl lux-title text-primary-gold mb-1">Rolex Lady-Datejust</h3>
+                </div>
+
+                <!-- Card 5: Cartier Panthère -->
+                <div class="bg-secondary-dark rounded-xl p-6 text-center shadow-gold-glow/20 hover:shadow-gold-glow transition duration-300 border border-primary-gold/10 cursor-pointer" onclick="loadProduct('cartier-panthere')">
+                    <img src="images/watch5.avif" onerror="this.src='images/watch5';" alt="watch5" class="w-full h-56 object-cover rounded-lg mb-4 hover:scale-105 transition duration-500">
+                    <h3 class="text-xl lux-title text-primary-gold mb-1">patek philippe TWENTY-4</h3>
+                </div>
+
+                <!-- Card 6: Chopard Happy Sport -->
+                <div class="bg-secondary-dark rounded-xl p-6 text-center shadow-gold-glow/20 hover:shadow-gold-glow transition duration-300 border border-primary-gold/10 cursor-pointer" onclick="loadProduct('chopard-happy-sport')">
+                    <img src="images/watch6.webp" onerror="this.src='images/watch6';" alt="watch6" class="w-full h-56 object-cover rounded-lg mb-4 hover:scale-105 transition duration-500">
+                    <h3 class="text-xl lux-title text-primary-gold mb-1">Tissot PRX 35mm</h3>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="bg-primary-dark border-t border-primary-gold/30">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-start space-y-6 md:space-y-0">
+                
+                <div class="text-center md:text-left">
+                    <h3 class="text-2xl lux-title font-bold text-primary-gold mb-2">𝓥𝓪𝓵𝓸𝓲𝓻</h3>
+                    <p class="text-sm text-gray-400">&copy; <span id="year"></span> Valoir. All rights reserved.</p>
+                </div>
+
+                <!-- Navigation Links in Footer -->
+                <div class="flex flex-col items-center md:items-start space-y-2 text-sm">
+                    <a href="index.html" class="text-gray-300 hover:text-primary-gold transition">Home</a>
+                    <a href="men_collection.html" class="text-gray-300 hover:text-primary-gold transition">Men's Watches</a>
+                    <a href="women_collection.html" class="text-gray-300 hover:text-primary-gold transition">Women's Watches</a>
+                    <a href="account.html" class="text-gray-300 hover:text-primary-gold transition">My Account</a>
+                    <a href="contact.html" class="text-gray-300 hover:text-primary-gold transition">Contact</a>
+                </div>
+
+                <!-- Social Media Links -->
+                <div class="flex flex-col items-center md:items-end space-y-2">
+                    <p class="text-sm text-gray-200">Connect With Us</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-primary-gold transition"><i data-lucide="instagram" class="w-6 h-6"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary-gold transition"><i data-lucide="facebook" class="w-6 h-6"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-primary-gold transition"><i data-lucide="twitter" class="w-6 h-6"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Dynamic Elements -->
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Footer year update
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Universal Modal Toggle Function
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
+        }
+
+        // Product Detail Toggle Function
+        function toggleSpecs() {
+            const content = document.getElementById('specs-content');
+            const icon = document.getElementById('specs-icon');
+            content.classList.toggle('hidden');
+            icon.classList.toggle('rotate-180');
+        }
+        
+        // --- Update Cart Count Badge ---
+        function updateCartCount() {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const countElement = document.getElementById('cart-count');
+        if (countElement) {
+        countElement.textContent = cart.length;
+        countElement.classList.toggle('hidden', cart.length === 0);
+        }
+       }
+        updateCartCount();
+
+        // --- ADD TO CART FUNCTIONALITY ---
+    document.getElementById('add-to-cart').addEventListener('click', function() {
+    const name = document.getElementById('product-main-title').textContent;
+    const price = document.getElementById('product-price').textContent;
+    const image = document.getElementById('main-product-img').src;
+
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push({ name, price, image });
+    localStorage.setItem('cart', JSON.stringify(cart));
+
+    alert(`${name} added to your cart!`);
+    updateCartCount(); // refresh cart badge
+});
+
+
+        // --- WATCH DATA (Consolidated Data Store) ---
+        const WATCH_DATA = {
+            'gmt-master-ii': {
+                name: "Rolex GMT-Master II",
+                tagline: "The iconic traveler’s timepiece — elegance meets exploration.",
+                price: "$110,000",
+                description: "A masterpiece of precision and style, the Rolex GMT-Master II allows travelers to effortlessly track multiple time zones. Its distinctive blue and black Cerachrom bezel and Oystersteel case embody adventure and elegance.",
+                image: "images/watch1.jpg",
+                specs: [
+                    { label: "Case Material", detail: "Oystersteel (904L stainless steel)" },
+                    { label: "Diameter", detail: "40 mm" },
+                    { label: "Movement", detail: "Perpetual, self-winding, Calibre 3285" },
+                    { label: "Water Resistance", detail: "100 meters (330 ft)" },
+                ]
+            },
+            'patek-nautilus': {
+                name: "Patek Philippe Nautilus",
+                tagline: "The pinnacle of luxury sports watches.",
+                price: "$215,000",
+                description: "Recognized globally for its distinctive porthole construction and horizontal embossed dial, the Nautilus is a legend in modern watchmaking, blending sophistication with casual ease.",
+                image: "images/watch2.jpg",
+                specs: [
+                    { label: "Case Material", detail: "Stainless Steel / Gold" },
+                    { label: "Diameter", detail: "40 mm" },
+                    { label: "Movement", detail: "Mechanical self-winding, Calibre 26‑330 S C" },
+                    { label: "Water Resistance", detail: "120 meters (390 ft)" },
+                ]
+            },
+            'rm-automatic': {
+                name: "RM 005 Automatic",
+                tagline: "Featuring a breathtaking skeletonized design.",
+                price: "$435,500",
+                description: "An exceptional example of high-tech watchmaking, the RM 005 combines extreme lightness with rugged performance, highlighted by its signature tonneau case and visible movement architecture.",
+                image: "images/watch3.jpeg",
+                specs: [
+                    { label: "Case Material", detail: "Titanium or Red Gold" },
+                    { label: "Diameter", detail: "50 x 42 mm" },
+                    { label: "Movement", detail: "Automatic with variable geometry rotor" },
+                    { label: "Water Resistance", detail: "50 meters (164 ft)" },
+                ]
+            },
+            'lady-datejust': {
+                name: "Rolex Lady-Datejust",
+                tagline: "Timeless femininity and elegance.",
+                price: "$35,000",
+                description: "The classic feminine watch, the Lady-Datejust blends classic design with precious materials. This version features a diamond-set dial and President bracelet, symbolizing grace and precision.",
+                image: "images/watch4.avif",
+                specs: [
+                    { label: "Case Material", detail: "Oystersteel and Everose Gold" },
+                    { label: "Diameter", detail: "28 mm" },
+                    { label: "Movement", detail: "Perpetual, mechanical, Calibre 2236" },
+                    { label: "Gem-Set", detail: "Diamonds on the bezel and hour markers" },
+                ]
+            },
+            'cartier-panthere': {
+                name: "Cartier Panthère",
+                tagline: "The watch as a piece of jewelry.",
+                price: "$22,000",
+                description: "More than a watch, the Panthère is a fluid, glamorous creation. Known for its flexible, tile-like bracelet and iconic square case, it’s a design icon reflecting the bold glamour of the 1980s.",
+                image: "images/watch5.avif",
+                specs: [
+                    { label: "Case Material", detail: "Yellow Gold or Stainless Steel" },
+                    { label: "Dimensions", detail: "27 x 37 mm (Medium Model)" },
+                    { label: "Movement", detail: "Quartz Movement" },
+                    { label: "Bracelet", detail: "Integrated, smooth-link bracelet" },
+                ]
+            },
+            'chopard-happy-sport': {
+                name: "Chopard Happy Sport",
+                tagline: "Dancing diamonds for joyous women.",
+                price: "$18,500",
+                description: "Famous for its signature feature—the moving diamonds that spin freely between two sapphire crystals—the Happy Sport embodies Chopard's philosophy of free-spirited luxury and joyful living.",
+                image: "images/watch6.webp",
+                specs: [
+                    { label: "Case Material", detail: "Stainless Steel" },
+                    { label: "Diameter", detail: "33 mm" },
+                    { label: "Movement", detail: "Automatic mechanical movement" },
+                    { label: "Special Feature", detail: "5 moving diamonds" },
+                ]
+            }
+        };
+
+        // --- CORE FUNCTIONALITY ---
+        function loadProduct(watchId) {
+            const data = WATCH_DATA[watchId];
+            if (!data) return;
+
+            // 1. Update Main Product Details
+            document.getElementById('product-main-title').textContent = data.name;
+            document.getElementById('product-tagline').textContent = data.tagline;
+            document.getElementById('product-price').textContent = data.price;
+            document.getElementById('product-description').textContent = data.description;
+            document.getElementById('main-product-img').src = data.image;
+            document.getElementById('main-product-img').onerror = () => {
+                // Fallback text if the specific image is missing
+                document.getElementById('main-product-img').src = `https://placehold.co/800x600/1F1F1F/A08552?text=${data.name.replace(/\s/g, '+')}`;
+            };
+            
+            // 2. Update Breadcrumbs
+            const breadcrumbs = document.getElementById('breadcrumbs-current');
+            breadcrumbs.textContent = data.name;
+
+            // 3. Update Technical Specifications List
+            const specsList = document.getElementById('specs-list');
+            specsList.innerHTML = ''; // Clear previous specs
+            data.specs.forEach(spec => {
+                const li = document.createElement('li');
+                li.innerHTML = `<b>${spec.label}:</b> ${spec.detail}`;
+                specsList.appendChild(li);
+            });
+            
+            // Ensure specs are visible if previously collapsed (optional, improves UX)
+            const specsContent = document.getElementById('specs-content');
+            const specsIcon = document.getElementById('specs-icon');
+            if (specsContent.classList.contains('hidden')) {
+                specsContent.classList.remove('hidden');
+                specsIcon.classList.remove('rotate-180');
+            }
+
+            // Scroll smoothly to the top of the details section
+            document.querySelector('.container.mx-auto').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Load the default product (Rolex GMT) when the page first loads
+        // Load the default product (Rolex GMT) when the page first loads
+window.onload = () => {
+    lucide.createIcons();
+    document.getElementById('year').textContent = new Date().getFullYear();
+    
+    // --- NEW LOGIC: Read ID from URL ---
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+
+    // If an ID is found in the URL, load that product. Otherwise, default to Rolex.
+    if (productId && WATCH_DATA[productId]) {
+        loadProduct(productId);
+    } else {
+        loadProduct('gmt-master-ii'); // Default product ID
+    }
+};
+    </script>
+</body>
+</html>

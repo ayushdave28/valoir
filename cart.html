@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>𝓥𝓪𝓵𝓸𝓲𝓻 - Your Cart</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-gold': '#A08552',
+                        'primary-dark': '#0F0F0F',
+                        'secondary-dark': '#1F1F1F',
+                    },
+                    fontFamily: {
+                        'serif-title': ['Playfair Display', 'serif'],
+                        'sans-body': ['Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'gold-glow': '0 0 15px rgba(160, 133, 82, 0.7)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'sans-body', sans-serif; }
+        .lux-title { font-family: 'serif-title', serif; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0F0F0F; }
+        ::-webkit-scrollbar-thumb { background: #A08552; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #C4A778; }
+    </style>
+</head>
+
+<body class="bg-primary-dark text-white min-h-screen antialiased">
+
+    <!-- NAVIGATION -->
+    <nav class="bg-primary-dark/90 sticky top-0 z-40 shadow-xl backdrop-blur-sm border-b border-primary-gold/30">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-20">
+            <a href="index.html" class="text-3xl lux-title font-bold text-primary-gold tracking-wider">𝓥𝓪𝓵𝓸𝓲𝓻</a>
+
+            <div class="flex items-center space-x-4">
+                <a href="index.html" class="text-white hover:text-primary-gold transition">
+                    <i data-lucide="home" class="w-5 h-5"></i>
+                </a>
+                <a href="cart.html" class="relative text-white hover:text-primary-gold transition">
+                    <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+                    <span id="cart-count" class="absolute -top-2 -right-2 bg-primary-gold text-primary-dark text-xs font-bold px-1.5 py-0.5 rounded-full hidden">0</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 class="text-4xl lux-title text-center text-primary-gold mb-10">Your Shopping Cart</h1>
+
+        <div id="cart-container" class="space-y-6"></div>
+
+        <!-- Total Section -->
+        <div id="cart-summary" class="mt-10 text-center hidden">
+            <p class="text-2xl font-bold mb-4">Total: <span id="cart-total" class="text-primary-gold">$0</span></p>
+
+            <!-- Payment Options -->
+            <div class="mb-6">
+                <p class="text-lg font-semibold mb-2">Select Payment Mode</p>
+                <div class="flex justify-center space-x-6">
+                    <label><input type="radio" name="payment" checked> Credit/Debit Card</label>
+                    <label><input type="radio" name="payment"> UPI</label>
+                    <label><input type="radio" name="payment"> Net Banking</label>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-center space-x-4">
+                <a href="index.html" class="bg-secondary-dark border border-primary-gold text-primary-gold px-6 py-3 rounded-lg font-semibold hover:bg-primary-gold/20 transition">Continue Shopping</a>
+                <button class="bg-primary-gold text-primary-dark px-6 py-3 rounded-lg font-bold hover:bg-opacity-90 transition shadow-md hover:shadow-gold-glow">Proceed to Checkout</button>
+            </div>
+        </div>
+
+        <!-- Empty Cart Message -->
+        <p id="empty-cart-msg" class="text-center text-gray-400 mt-10">Your cart is empty.</p>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        // Load cart
+        const cartContainer = document.getElementById('cart-container');
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalEl = document.getElementById('cart-total');
+        const emptyMsg = document.getElementById('empty-cart-msg');
+        const summary = document.getElementById('cart-summary');
+
+        function updateCartCount() {
+            const countEl = document.getElementById('cart-count');
+            countEl.textContent = cart.length;
+            countEl.classList.toggle('hidden', cart.length === 0);
+        }
+
+        function renderCart() {
+            cartContainer.innerHTML = '';
+            if (cart.length === 0) {
+                emptyMsg.classList.remove('hidden');
+                summary.classList.add('hidden');
+                updateCartCount();
+                return;
+            }
+            emptyMsg.classList.add('hidden');
+            summary.classList.remove('hidden');
+
+            let total = 0;
+            cart.forEach((item, index) => {
+                const priceNum = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+                total += priceNum;
+
+                const card = document.createElement('div');
+                card.className = "flex flex-col sm:flex-row items-center justify-between bg-secondary-dark border border-primary-gold/20 rounded-xl p-5 shadow-gold-glow/20 hover:shadow-gold-glow transition";
+                card.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <img src="${item.image}" class="w-28 h-28 object-cover rounded-lg border border-primary-gold/20">
+                        <div>
+                            <h3 class="text-xl lux-title text-primary-gold mb-1">${item.name}</h3>
+                            <p class="text-lg font-semibold">${item.price}</p>
+                        </div>
+                    </div>
+                    <button onclick="removeItem(${index})" class="mt-4 sm:mt-0 bg-primary-gold text-primary-dark px-4 py-2 rounded-lg hover:bg-opacity-90 transition">Remove</button>
+                `;
+                cartContainer.appendChild(card);
+            });
+
+            totalEl.textContent = `$${total.toLocaleString()}`;
+            updateCartCount();
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        }
+
+        renderCart();
+    </script>
+</body>
+</html>
